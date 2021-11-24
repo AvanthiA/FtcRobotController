@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "TeleOps Code?", group = "")
-public class BaseCode extends LinearOpMode {
+@TeleOp(name = "TeleOps Code", group = "")
+public class TeleOps extends LinearOpMode {
 
     public DcMotor Right_Front_Wheel;
     public DcMotor Left_Front_Wheel;
@@ -71,7 +71,7 @@ public class BaseCode extends LinearOpMode {
                 // Elbow
                 if (gamepad2.dpad_down) {
                     elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    elbow.setTargetPosition(-800);
+                    elbow.setTargetPosition(-1200);
                     elbow.setPower(1);
                 } else if (gamepad2.dpad_up) {
                     elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -95,7 +95,7 @@ public class BaseCode extends LinearOpMode {
                 // Arm
                 if (gamepad2.x) {
                     arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    arm.setTargetPosition(2100);
+                    arm.setTargetPosition(1200);
                     arm.setPower(-1);
                 } else if (gamepad2.b) {
                     arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
