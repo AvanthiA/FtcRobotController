@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "TeleOps Code", group = "")
-public class TeleOps extends LinearOpMode {
+@TeleOp(name = "NO ENCODER ATTACHMENTS", group = "")
+public class NoEncoderAttatchments extends LinearOpMode {
 
     public DcMotor Right_Front_Wheel;
     public DcMotor Left_Front_Wheel;
@@ -52,9 +52,6 @@ public class TeleOps extends LinearOpMode {
         /*robot = new Robot();
         robot.Init(hardwareMap, telemetry, false);
          */
-        elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        base.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -70,36 +67,24 @@ public class TeleOps extends LinearOpMode {
 
                 // Elbow
                 if (gamepad2.dpad_down) {
-                    elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    elbow.setTargetPosition(-100);
                     elbow.setPower(1);
                 } else if (gamepad2.dpad_up) {
-                    elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    elbow.setTargetPosition(1300);
                     elbow.setPower(-1);
                 } else {
                     elbow.setPower(0);
                 }
                 // Base
                 if (gamepad2.dpad_right) {
-                    base.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    base.setTargetPosition(0);
                     base.setPower(-0.3);
                 } else if (gamepad2.dpad_left) {
-                    base.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    base.setTargetPosition(2600);
                     base.setPower(0.3);
                 } else {
                     base.setPower(0);
                 }
                 // Arm
                 if (gamepad2.x) {
-                    arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    arm.setTargetPosition(1200);
                     arm.setPower(-1);
                 } else if (gamepad2.b) {
-                    arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    arm.setTargetPosition(0);
                     arm.setPower(1);
                 } else {
                     arm.setPower(0);
