@@ -40,7 +40,7 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("Y_Multipliyer", 50 / poseEstimate.getY());
+
             // Trial 1:
             // Trial 2:
             // Trial 3:
