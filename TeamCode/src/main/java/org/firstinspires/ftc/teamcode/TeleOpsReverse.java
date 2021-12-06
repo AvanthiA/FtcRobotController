@@ -4,13 +4,16 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.lang.Math;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+//import java.lang.Float;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-
-@TeleOp(name = "TeleOps Code", group = "")
-public class TeleOps extends LinearOpMode {
+@TeleOp(name = "TeleOpsReverse Code", group = "")
+public class TeleOpsReverse extends LinearOpMode {
 
     public DcMotor Right_Front_Wheel;
     public DcMotor Left_Front_Wheel;
@@ -32,10 +35,10 @@ public class TeleOps extends LinearOpMode {
     public void runOpMode() {
 
 
-        Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
-        Left_Front_Wheel = hardwareMap.get(DcMotor.class, "Left_front");
-        Right_Rear_Wheel = hardwareMap.get(DcMotor.class, "Right_back");
-        Right_Front_Wheel = hardwareMap.get(DcMotor.class, "Right_front");
+        Left_Front_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
+        Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_front");
+        Right_Front_Wheel = hardwareMap.get(DcMotor.class, "Right_back");
+        Right_Rear_Wheel = hardwareMap.get(DcMotor.class, "Right_front");
         elbow = hardwareMap.get(DcMotor.class, "elbow");
         arm = hardwareMap.get(DcMotor.class, "arm");
         base = hardwareMap.get(DcMotor.class, "base");

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Odometry;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Odometry.OdometryGlobalCoordinatePosition;
  * Created by Sarthak on 6/1/2019.
  * Example OpMode that runs the GlobalCoordinatePosition thread and accesses the (x, y, theta) coordinate values
  */
+@Disabled
 @TeleOp(name = "Autonomous", group = "Calibration")
 public class Autonomous extends LinearOpMode {
     //globalPositionUpdate.reverseRightEncoder();

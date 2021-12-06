@@ -67,25 +67,25 @@ public class NoEncoderAttatchments extends LinearOpMode {
 
                 // Elbow
                 if (gamepad2.dpad_down) {
-                    elbow.setPower(1);
+                    elbow.setPower(-0.4);
                 } else if (gamepad2.dpad_up) {
-                    elbow.setPower(-1);
+                    elbow.setPower(0.4);
                 } else {
                     elbow.setPower(0);
                 }
                 // Base
-                if (gamepad2.dpad_right) {
+                if (gamepad2.dpad_left) {
                     base.setPower(-0.3);
-                } else if (gamepad2.dpad_left) {
+                } else if (gamepad2.dpad_right) {
                     base.setPower(0.3);
                 } else {
                     base.setPower(0);
                 }
                 // Arm
                 if (gamepad2.x) {
-                    arm.setPower(-1);
+                    arm.setPower(-0.5);
                 } else if (gamepad2.b) {
-                    arm.setPower(1);
+                    arm.setPower(0.5);
                 } else {
                     arm.setPower(0);
                 }

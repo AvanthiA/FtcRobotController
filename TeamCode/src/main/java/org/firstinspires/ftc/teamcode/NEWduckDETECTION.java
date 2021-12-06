@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -49,26 +49,26 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+@TeleOp(name = "NEWduckDETECTION", group = "Concept")
 
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
-  /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
-   * the following 4 detectable objects
-   *  0: Ball,
-   *  1: Cube,
-   *  2: Duck,
-   *  3: Marker (duck location tape marker)
-   *
-   *  Two additional model assets are available which only contain a subset of the objects:
-   *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-   *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
-   */
+public class NEWduckDETECTION extends LinearOpMode {
+    /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
+     * the following 4 detectable objects
+     *  0: Ball,
+     *  1: Cube,
+     *  2: Duck,
+     *  3: Marker (duck location tape marker)
+     *
+     *  Two additional model assets are available which only contain a subset of the objects:
+     *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
+     *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+     */
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
-      "Ball",
-      "Cube",
-      "Duck",
-      "Marker"
+            "Ball",
+            "Cube",
+            "Duck",
+            "Marker"
     };
 
     /*
@@ -129,30 +129,46 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            boolean duck = false;
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    String position = "third";
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
-                      for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        // step through the list of recognitions and display boundary info.
+                        int i = 0;
+                        for (Recognition recognition : updatedRecognitions) {
+                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
 
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
-                        i++;
-                      }
+                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                    recognition.getLeft(), recognition.getTop());
+                            telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                    recognition.getRight(), recognition.getBottom());
+                            double left = recognition.getLeft();
+                            double right = recognition.getRight();
+                            double top = recognition.getTop();
+                            double bottom = recognition.getBottom();
 
-                      telemetry.update();
+                            if(recognition.getLabel().equals("Duck") && left>330 && left<370&& top>100 && top<120 &&right>410 && right<460 && bottom>200 && bottom<220){
+                                position = "first";
+                                break;
+                            }
+                            if(recognition.getLabel().equals("Duck") && left>40 && left<90&& top>80 && top<100 &&right>120 && right<180 && bottom>180 && bottom<210){
+                                position = "second";
+                                break;
+                            }
+                          i++;
+                        }
+                        telemetry.addData("position",position);
+
+                        telemetry.update();
+                        sleep(2000);
                     }
                 }
             }
-        }
+
     }
 
     /**
@@ -178,12 +194,12 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.8f;
-       tfodParameters.isModelTensorFlow2 = true;
-       tfodParameters.inputSize = 320;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 }

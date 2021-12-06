@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -14,27 +14,27 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  */
 @Disabled
 @Autonomous(group = "drive")
-public class SplineTest extends LinearOpMode {
+public class autonomous extends LinearOpMode {
+    double DISTANCE = 7; // in
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        waitForStart();
-
-        if (isStopRequested()) return;
-
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(30, 30), 0)
+        Trajectory strafeRightTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(DISTANCE)
+                .build();
+        DISTANCE = 26;
+        Trajectory backwardTrajectory = drive.trajectoryBuilder(strafeRightTrajectory.end())
+                .back(DISTANCE)
                 .build();
 
-        drive.followTrajectory(traj);
+        waitForStart();
+        if (isStopRequested()) return;
 
-        sleep(2000);
+        drive.followTrajectory(strafeRightTrajectory);
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder(traj.end(), true)
-                        .splineTo(new Vector2d(0, 0), Math.toRadians(180))
-                        .build()
-        );
+        drive.followTrajectory(backwardTrajectory);
+
     }
+
+
 }
