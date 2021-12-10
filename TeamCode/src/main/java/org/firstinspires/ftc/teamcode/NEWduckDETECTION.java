@@ -150,12 +150,23 @@ public class NEWduckDETECTION extends LinearOpMode {
                             double right = recognition.getRight();
                             double top = recognition.getTop();
                             double bottom = recognition.getBottom();
-
+                            /* RED COORDINATES
                             if(recognition.getLabel().equals("Duck") && left>330 && left<370&& top>100 && top<120 &&right>410 && right<460 && bottom>200 && bottom<220){
                                 position = "first";
                                 break;
                             }
                             if(recognition.getLabel().equals("Duck") && left>40 && left<90&& top>80 && top<100 &&right>120 && right<180 && bottom>180 && bottom<210){
+                                position = "second";
+                                break;
+                            }
+
+                             */
+                            // BLUE COORDINATES
+                            if(recognition.getLabel().equals("Duck") && left>460 && left<510&& top>90 && top<140 &&right>540 && right<590 && bottom>180 && bottom<230){
+                                position = "first";
+                                break;
+                            }
+                            if(recognition.getLabel().equals("Duck") && left>170 && left<220&& top>70 && top<130 &&right>240 && right<300 && bottom>170 && bottom<220){
                                 position = "second";
                                 break;
                             }
