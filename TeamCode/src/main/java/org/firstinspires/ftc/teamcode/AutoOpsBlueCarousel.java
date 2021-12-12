@@ -26,7 +26,7 @@ import java.util.List;
  */
 
 @Autonomous(group = "drive")
-public class AutoOpsBlueCarouselCurrent extends LinearOpMode {
+public class AutoOpsBlueCarousel extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {

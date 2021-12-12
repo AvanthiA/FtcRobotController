@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "NO ENCODER ATTACHMENTS", group = "")
+@TeleOp(name = "CURRENT TELEOPS", group = "")
 public class NoEncoderAttatchments extends LinearOpMode {
 
     public DcMotor Right_Front_Wheel;
