@@ -15,24 +15,49 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Disabled
 @Autonomous(group = "drive")
 public class autonomous extends LinearOpMode {
-    double DISTANCE = 7; // in
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Trajectory strafeRightTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(DISTANCE)
-                .build();
-        DISTANCE = 26;
-        Trajectory backwardTrajectory = drive.trajectoryBuilder(strafeRightTrajectory.end())
-                .back(DISTANCE)
-                .build();
+
 
         waitForStart();
         if (isStopRequested()) return;
 
-        drive.followTrajectory(strafeRightTrajectory);
+        /*Trajectory forward = drive.trajectoryBuilder(new Pose2d())
+                .forward(20)
+                .build();
 
+        drive.followTrajectory(forward);
+        forward.end();
+        sleep(5000); */
+
+        /*Trajectory strafeRightTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(40)
+                .build();
+        drive.followTrajectory(strafeRightTrajectory);
+        strafeRightTrajectory.end();
+        sleep(500); */
+
+        Trajectory strafeLeftTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeLeft(40)
+                .build();
+        drive.followTrajectory(strafeLeftTrajectory);
+        strafeLeftTrajectory.end();
+        sleep(500);
+
+        /*Trajectory backwardTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .back(15)
+                .build();
         drive.followTrajectory(backwardTrajectory);
+        backwardTrajectory.end();*/
+
+        /*Trajectory forwardTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .forward(15)
+                .build();
+        drive.followTrajectory(forwardTrajectory);
+        forwardTrajectory.end();*/
+
 
     }
 

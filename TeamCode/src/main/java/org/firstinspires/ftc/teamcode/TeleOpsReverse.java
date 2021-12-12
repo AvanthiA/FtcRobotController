@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.lang.Math;
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //import java.lang.Float;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Disabled
 @TeleOp(name = "TeleOpsReverse Code", group = "")
 public class TeleOpsReverse extends LinearOpMode {
 

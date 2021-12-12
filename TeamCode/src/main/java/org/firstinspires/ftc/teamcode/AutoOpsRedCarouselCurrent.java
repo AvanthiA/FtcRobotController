@@ -75,6 +75,7 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
+
     private void first(){
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -86,7 +87,7 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .strafeRight(17)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
 
         //moving forward so it is nearer to the caruosel
         Trajectory forward = drive.trajectoryBuilder(traj.end())
@@ -94,23 +95,23 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .build();
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
+
 
         //sliding right closer to the depot
         traj = drive.trajectoryBuilder(forward.end())
-                .strafeRight(20)
+                .strafeRight(20.5)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
 
         //moving backward towards shipping hub
         Trajectory back = drive.trajectoryBuilder(traj.end())
-                .back(24)
+                .back(26.5)
                 .build();
         drive.followTrajectory(back);
         back.end();
 
-        sleep(500);
+
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -135,7 +136,7 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
             telemetry.update();
         }
         elbow.setPower(0);
-        sleep(500);
+
 
         // extend arm
         arm.setTargetPosition(1050);
@@ -146,18 +147,18 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
             telemetry.update();
         }
         arm.setPower(0);
-        sleep(500);
+
 
         //running the picker to drop the cube
         int x=0;
-        while (x<30000 && opModeIsActive()){
+        while (x<50000 && opModeIsActive()){
             picker.setPower(1);
             x++;
             telemetry.addData("x value: ", x);
             telemetry.update();
         }
         picker.setPower(0);
-        sleep(500);
+
 
         //arm retracts
         arm.setTargetPosition(0);
@@ -169,47 +170,44 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
         }
         arm.setPower(0);
 
-        sleep(500);
+
 
         //elbow down
-        elbow.setTargetPosition(45);
-        while (elbow.getCurrentPosition() > 60 && opModeIsActive()) {
+        elbow.setTargetPosition(0);
+        while (elbow.getCurrentPosition() > 0 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(-0.5);
             telemetry.update();
         }
         elbow.setPower(0);
-        sleep(500);
+
 
         //goes forward towards the depot
          forward = drive.trajectoryBuilder(back.end())
-                .forward(24)
+                .forward(25.5)
                 .build();
 
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
 
-        //move left 29 inches so robot is at carousel
+
+        //move left 29.5 inches so robot is at carousel
         Trajectory strafeLeft = drive.trajectoryBuilder(forward.end())
-                .strafeLeft(29)
+                .strafeLeft(30.5)
                 .build();
         drive.followTrajectory(strafeLeft);
         strafeLeft.end();
 
-        //Sleep for half a second
-        sleep(500);
-
-        //slowly slide 1 inch towards carousel but not using roadrunner
         Left_Front_Wheel.setPower(-0.275);
         Right_Front_Wheel.setPower(0.275);
         Left_Rear_Wheel.setPower(0.275);
         Right_Rear_Wheel.setPower(-0.275);
-        sleep(850);
+        sleep(150);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
+
 
         //power carousel for duck
         carousel.setPower(-0.5);
@@ -218,24 +216,28 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
 
         //Move right to park in the depot
         Trajectory strafeRight = drive.trajectoryBuilder(strafeLeft.end())
-                .strafeRight(22)
+                .strafeRight(23)
                 .build();
         drive.followTrajectory(strafeRight);
         strafeRight.end();
 
-        Left_Front_Wheel.setPower(0.35);
-        Right_Front_Wheel.setPower(0.35);
-        Left_Rear_Wheel.setPower(0.35);
-        Right_Rear_Wheel.setPower(0.35);
-        sleep(250);
+        //goes forward so fully in box
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(400);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
+
+
     }
 
 
     private void second(){
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         if (isStopRequested()) return;
@@ -245,7 +247,7 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .strafeRight(17)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
 
         //moving forward so it is nearer to the caruosel
         Trajectory forward = drive.trajectoryBuilder(traj.end())
@@ -253,14 +255,23 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .build();
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
+
 
         //sliding right closer to the depot
         traj = drive.trajectoryBuilder(forward.end())
-                .strafeRight(20)
+                .strafeRight(20.5)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
+
+        //moving backward towards shipping hub
+        Trajectory back = drive.trajectoryBuilder(traj.end())
+                .back(23)
+                .build();
+        drive.followTrajectory(back);
+        back.end();
+
+
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -279,13 +290,13 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
 
         //arm tilts upward
         elbow.setTargetPosition(500);
-        while (elbow.getCurrentPosition() < 475 && opModeIsActive()) {
+        while (elbow.getCurrentPosition() < 500 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(0.5);
             telemetry.update();
         }
         elbow.setPower(0);
-        sleep(500);
+
 
         // extend arm
         arm.setTargetPosition(1050);
@@ -296,24 +307,20 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
             telemetry.update();
         }
         arm.setPower(0);
-        sleep(500);
 
-        Trajectory back = drive.trajectoryBuilder(traj.end())
-                .back(20)
-                .build();
-        drive.followTrajectory(back);
-        back.end();
 
-        int y=0;
-        while (y<30000 && opModeIsActive()){
+        //running the picker to drop the cube
+        int x=0;
+        while (x<50000 && opModeIsActive()){
             picker.setPower(1);
-            y++;
-            telemetry.addData("y value: ", y);
+            x++;
+            telemetry.addData("x value: ", x);
             telemetry.update();
         }
         picker.setPower(0);
-        sleep(500);
 
+
+        //arm retracts
         arm.setTargetPosition(0);
         while (arm.getCurrentPosition() > 50 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -323,47 +330,44 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
         }
         arm.setPower(0);
 
-        sleep(500);
+
 
         //elbow down
         elbow.setTargetPosition(0);
-        while (elbow.getCurrentPosition() > 5 && opModeIsActive()) {
+        while (elbow.getCurrentPosition() > 0 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(-0.5);
             telemetry.update();
         }
-        //Subtract 4 from the distance you need to move back to the storage area
-        sleep(500);
+        elbow.setPower(0);
+
 
         //goes forward towards the depot
         forward = drive.trajectoryBuilder(back.end())
-                .forward(20)
+                .forward(22)
                 .build();
 
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
 
-        //move left 29 inches so robot is at carousel
+
+        //move left 29.5 inches so robot is at carousel
         Trajectory strafeLeft = drive.trajectoryBuilder(forward.end())
-                .strafeLeft(29)
+                .strafeLeft(30.5)
                 .build();
         drive.followTrajectory(strafeLeft);
         strafeLeft.end();
 
-        //Sleep for half a second
-        sleep(500);
-
-        //slowly slide 1 inch towards carousel but not using roadrunner
         Left_Front_Wheel.setPower(-0.275);
         Right_Front_Wheel.setPower(0.275);
         Left_Rear_Wheel.setPower(0.275);
         Right_Rear_Wheel.setPower(-0.275);
-        sleep(850);
+        sleep(150);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
+
 
         //power carousel for duck
         carousel.setPower(-0.5);
@@ -372,26 +376,17 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
 
         //Move right to park in the depot
         Trajectory strafeRight = drive.trajectoryBuilder(strafeLeft.end())
-                .strafeRight(22)
+                .strafeRight(23)
                 .build();
         drive.followTrajectory(strafeRight);
         strafeRight.end();
 
-        Left_Front_Wheel.setPower(0.35);
-        Right_Front_Wheel.setPower(-0.35);
-        Left_Rear_Wheel.setPower(-0.35);
-        Right_Rear_Wheel.setPower(0.35);
-        sleep(250);
-        Left_Front_Wheel.setPower(0);
-        Right_Front_Wheel.setPower(0);
-        Left_Rear_Wheel.setPower(0);
-        Right_Rear_Wheel.setPower(0);
-
-        Left_Front_Wheel.setPower(0.35);
-        Right_Front_Wheel.setPower(0.35);
-        Left_Rear_Wheel.setPower(0.35);
-        Right_Rear_Wheel.setPower(0.35);
-        sleep(250);
+        //goes forward so fully in box
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(400);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
@@ -410,7 +405,7 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .strafeRight(17)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
 
         //moving forward so it is nearer to the caruosel
         Trajectory forward = drive.trajectoryBuilder(traj.end())
@@ -418,14 +413,23 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                 .build();
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
+
 
         //sliding right closer to the depot
         traj = drive.trajectoryBuilder(forward.end())
-                .strafeRight(20)
+                .strafeRight(20.5)
                 .build();
         drive.followTrajectory(traj);
-        sleep(500);
+
+
+        //moving backward towards shipping hub
+        Trajectory back = drive.trajectoryBuilder(traj.end())
+                .back(20.5)
+                .build();
+        drive.followTrajectory(back);
+        back.end();
+
+
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -450,25 +454,20 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
             telemetry.update();
         }
         arm.setPower(0);
-        sleep(500);
 
-        Trajectory back = drive.trajectoryBuilder(traj.end())
-                .back(18)
-                .build();
-        drive.followTrajectory(back);
-        back.end();
 
-        int y=0;
-        while (y<30000 && opModeIsActive()){
+        //running the picker to drop the cube
+        int x=0;
+        while (x<50000 && opModeIsActive()){
             picker.setPower(1);
-            y++;
-            telemetry.addData("y value: ", y);
+            x++;
+            telemetry.addData("x value: ", x);
             telemetry.update();
         }
         picker.setPower(0);
-        sleep(500);
 
-        //Bring arm in
+
+        //arm retracts
         arm.setTargetPosition(0);
         while (arm.getCurrentPosition() > 50 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -478,74 +477,60 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
         }
         arm.setPower(0);
 
-        sleep(500);
 
-        //Subtract 4 from the distance you need to move back to the storage area
-        sleep(500);
 
-        //goes forward towards the storage area
+        //goes forward towards the depot
         forward = drive.trajectoryBuilder(back.end())
-                .forward(18)
+                .forward(19.5)
                 .build();
 
         drive.followTrajectory(forward);
         forward.end();
-        sleep(500);
 
-        //move left 29 inches so robot is at carousel
+
+        //move left 29.5 inches so robot is at carousel
         Trajectory strafeLeft = drive.trajectoryBuilder(forward.end())
-                .strafeLeft(29)
+                .strafeLeft(30.5)
                 .build();
         drive.followTrajectory(strafeLeft);
         strafeLeft.end();
 
-        //Sleep for half a second
-        sleep(500);
-
-        //slowly slide 1 inch towards carousel but not using roadrunner
         Left_Front_Wheel.setPower(-0.275);
         Right_Front_Wheel.setPower(0.275);
         Left_Rear_Wheel.setPower(0.275);
         Right_Rear_Wheel.setPower(-0.275);
-        sleep(850);
+        sleep(150);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
+
 
         //power carousel for duck
         carousel.setPower(-0.5);
         sleep(3000);
         carousel.setPower(0);
 
-        //Move right to park in the storage unit
+        //Move right to park in the depot
         Trajectory strafeRight = drive.trajectoryBuilder(strafeLeft.end())
-                .strafeRight(22)
+                .strafeRight(23)
                 .build();
         drive.followTrajectory(strafeRight);
         strafeRight.end();
-        sleep(500);
 
-        Left_Front_Wheel.setPower(0.35);
-        Right_Front_Wheel.setPower(-0.35);
-        Left_Rear_Wheel.setPower(-0.35);
-        Right_Rear_Wheel.setPower(0.35);
-        sleep(250);
-        Left_Front_Wheel.setPower(0);
-        Right_Front_Wheel.setPower(0);
-        Left_Rear_Wheel.setPower(0);
-        Right_Rear_Wheel.setPower(0);
-
-        Left_Front_Wheel.setPower(0.35);
-        Right_Front_Wheel.setPower(0.35);
-        Left_Rear_Wheel.setPower(0.35);
-        Right_Rear_Wheel.setPower(0.35);
-        sleep(250);
+        //goes forward so fully in box
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(400);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
     }
+
+
 
 
 
@@ -597,11 +582,11 @@ public class AutoOpsRedCarouselCurrent extends LinearOpMode {
                         double top = recognition.getTop();
                         double bottom = recognition.getBottom();
 
-                        if(recognition.getLabel().equals("Duck") && left>330 && left<370&& top>100 && top<120 &&right>410 && right<460 && bottom>200 && bottom<220){
+                        if(recognition.getLabel().equals("Duck") && left>310 && left<390&& top>80 && top<140 &&right>390 && right<480 && bottom>180 && bottom<260){
                             position = "first";
                             break;
                         }
-                        if(recognition.getLabel().equals("Duck") && left>40 && left<90&& top>80 && top<110 &&right>120 && right<180 && bottom>180 && bottom<210){
+                        if(recognition.getLabel().equals("Duck") && left>20 && left<110&& top>60 && top<130 &&right>100 && right<200 && bottom>160 && bottom<230){
                             position = "second";
                             break;
                         }

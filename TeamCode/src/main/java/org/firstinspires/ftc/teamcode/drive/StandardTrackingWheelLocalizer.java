@@ -35,8 +35,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double FORWARD_OFFSET = -6.5; // in; offset of the lateral wheel
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
-    public static double X_MULTIPLIER = 0.25293; //0.99474704; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 0.259; //1.02884579; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 0.25;//0.25293; //0.99474704; // Multiplier in the X direction
+    public static double Y_MULTIPLIER =0.25; //0.259; //1.02884579; // Multiplier in the Y direction
 
     public StandardTrackingWheelLocalizer(HardwareMap hardwareMap) {
         super(Arrays.asList(
@@ -51,7 +51,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         frontEncoder.setDirection((Encoder.Direction.REVERSE));
-        leftEncoder.setDirection((Encoder.Direction.REVERSE));
+        leftEncoder.setDirection(Encoder.Direction.REVERSE);
+
+
     }
 
     public static double encoderTicksToInches(double ticks) {

@@ -24,7 +24,7 @@ import java.util.List;
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-
+@Disabled
 @Autonomous(group = "drive")
 public class AutoOpsRedCarouselInitial extends LinearOpMode {
 
