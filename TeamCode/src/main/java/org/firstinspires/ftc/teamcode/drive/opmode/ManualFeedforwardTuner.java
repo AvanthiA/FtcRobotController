@@ -44,7 +44,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 65; // in
+    public static double DISTANCE = 60; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -123,8 +123,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     telemetry.addData("targetVelocity", motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);
-
-
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {
@@ -141,8 +139,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                                     -gamepad1.right_stick_x
                             )
                     );
-
-
                     break;
             }
 

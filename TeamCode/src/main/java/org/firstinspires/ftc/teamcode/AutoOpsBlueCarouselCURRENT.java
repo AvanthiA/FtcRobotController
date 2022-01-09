@@ -26,7 +26,7 @@ import java.util.List;
  */
 
 @Autonomous(group = "drive")
-public class AutoOpsBlueWarehouse extends LinearOpMode {
+public class AutoOpsBlueCarouselCURRENT extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
@@ -50,6 +50,8 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
     public DcMotor base;
     public CRServo picker;
     public DcMotor carousel;
+
+    double STRAFE = 1.3;
 
     private void initVuforia() {
         /*
@@ -75,29 +77,30 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
+
+
     private void first(){
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         if (isStopRequested()) return;
 
-        //strafe right a little so doesn't hit wall while turning later on
-        Trajectory strafeRight = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(19)
+
+        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(17.5*STRAFE)//18
                 .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
+        drive.followTrajectory(traj);
+
+        drive.turn(Math.toRadians(100));//99//97//95//100//96//100
 
 
-        //move backward so parallel to shipping hub
-        Trajectory backward = drive.trajectoryBuilder(strafeRight.end())
-                .back(25)
+        traj = drive.trajectoryBuilder(traj.end().plus(new Pose2d(0,0,Math.toRadians(85))),false)
+                .strafeRight(21)
                 .build();
-        drive.followTrajectory(backward);
+        drive.followTrajectory(traj);
+        traj.end();
 
 
-        //turn 90 degrees so robot is facing backwards (battery to the wall and arm is pointing to shipping hub)
-        drive.turn(Math.toRadians(95));
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -115,17 +118,18 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
 
         //arm tilts upward
-        elbow.setTargetPosition(875);
-        while (elbow.getCurrentPosition() < 875 && opModeIsActive()) {
+        elbow.setTargetPosition(870);
+        while (elbow.getCurrentPosition() < 870 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(0.5);
             telemetry.update();
         }
         elbow.setPower(0);
 
+
         // extend arm
-        arm.setTargetPosition(1100);
-        while (arm.getCurrentPosition() < 1050 && opModeIsActive()) {
+        arm.setTargetPosition(1050);
+        while (arm.getCurrentPosition() < 1025 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -133,9 +137,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         arm.setPower(0);
 
+
         //running the picker to drop the cube
         int x=0;
-        while (x<50000 && opModeIsActive()){
+        while (x<120000 && opModeIsActive()){
             picker.setPower(1);
             x++;
             telemetry.addData("x value: ", x);
@@ -143,9 +148,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         picker.setPower(0);
 
+
         //arm retracts
-        arm.setTargetPosition(0);
-        while (arm.getCurrentPosition() > 50 && opModeIsActive()) {
+        arm.setTargetPosition(-50);
+        while (arm.getCurrentPosition() > -50 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(-1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -153,52 +159,55 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         arm.setPower(0);
 
-
-        //elbow down
-        elbow.setTargetPosition(0);
-        while (elbow.getCurrentPosition() > 0 && opModeIsActive()) {
+        //arm tilts downward
+        elbow.setTargetPosition(50);
+        while (elbow.getCurrentPosition() > 50 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(-0.5);
             telemetry.update();
         }
         elbow.setPower(0);
 
-        //robot turns -90 degrees so previous 90 turn is cancelled
-        drive.turn(Math.toRadians(-95));
-
-        //strafe Left so robot touches wall again
-        Trajectory strafeLeft = drive.trajectoryBuilder(backward.end())
-                .strafeLeft(20.5)
+        Trajectory strafeLeft = drive.trajectoryBuilder(traj.end())
+                .strafeLeft(39.5*STRAFE)
                 .build();
-
         drive.followTrajectory(strafeLeft);
+        strafeLeft.end();
 
-        Left_Front_Wheel.setPower(-0.25);
-        Right_Front_Wheel.setPower(0.25);
-        Left_Rear_Wheel.setPower(0.25);
-        Right_Rear_Wheel.setPower(-0.25);
-        sleep(1000);
+
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(700);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
 
+        //power carousel for duck
+        carousel.setPower(0.5);
+        sleep(2500);
+        carousel.setPower(0);
 
-        //move forward 45 inches so in warehouse
-        Trajectory forward = drive.trajectoryBuilder(strafeLeft.end())
-                .forward(65)
-                .build();
-        drive.followTrajectory(forward);
-        forward.end();
-
-        //strafe right a little to protect against potentially getting rammed by the other team
-        strafeRight = drive.trajectoryBuilder(forward.end())
-                .strafeRight(25)
-                .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
+        Left_Front_Wheel.setPower(-0.275);
+        Right_Front_Wheel.setPower(-0.275);
+        Left_Rear_Wheel.setPower(-0.275);
+        Right_Rear_Wheel.setPower(-0.275);
+        sleep(1250);
+        Left_Front_Wheel.setPower(0);
+        Right_Front_Wheel.setPower(0);
+        Left_Rear_Wheel.setPower(0);
+        Right_Rear_Wheel.setPower(0);
 
     }
+
+
+
+
+
+
+
 
     private void second(){
 
@@ -206,23 +215,22 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        //strafe right a little so doesn't hit wall while turning later on
-        Trajectory strafeRight = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(15)
+
+        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(13*STRAFE)//14//18
                 .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
+        drive.followTrajectory(traj);
+
+        drive.turn(Math.toRadians(100));//99//97//95//100//96//100
 
 
-        //move backward so parallel to shipping hub
-        Trajectory backward = drive.trajectoryBuilder(strafeRight.end())
-                .back(25)
+        traj = drive.trajectoryBuilder(traj.end().plus(new Pose2d(0,0,Math.toRadians(85))),false)
+                .strafeRight(21)
                 .build();
-        drive.followTrajectory(backward);
+        drive.followTrajectory(traj);
+        traj.end();
 
 
-        //turn 90 degrees so robot is facing backwards (battery to the wall and arm is pointing to shipping hub)
-        drive.turn(Math.toRadians(95));
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -240,17 +248,18 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
 
         //arm tilts upward
-        elbow.setTargetPosition(500);
-        while (elbow.getCurrentPosition() < 500 && opModeIsActive()) {
+        elbow.setTargetPosition(400);
+        while (elbow.getCurrentPosition() < 400 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(0.5);
             telemetry.update();
         }
         elbow.setPower(0);
 
+
         // extend arm
-        arm.setTargetPosition(1100);
-        while (arm.getCurrentPosition() < 1050 && opModeIsActive()) {
+        arm.setTargetPosition(1050);
+        while (arm.getCurrentPosition() < 1025 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -258,9 +267,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         arm.setPower(0);
 
+
         //running the picker to drop the cube
         int x=0;
-        while (x<50000 && opModeIsActive()){
+        while (x<120000 && opModeIsActive()){
             picker.setPower(1);
             x++;
             telemetry.addData("x value: ", x);
@@ -268,9 +278,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         picker.setPower(0);
 
+
         //arm retracts
-        arm.setTargetPosition(0);
-        while (arm.getCurrentPosition() > 50 && opModeIsActive()) {
+        arm.setTargetPosition(-50);
+        while (arm.getCurrentPosition() > -50 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(-1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -278,52 +289,51 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         arm.setPower(0);
 
-
-        //elbow down
-        elbow.setTargetPosition(0);
-        while (elbow.getCurrentPosition() > 0 && opModeIsActive()) {
+        //arm tilts downward
+        elbow.setTargetPosition(50);
+        while (elbow.getCurrentPosition() > 50 && opModeIsActive()) {
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             elbow.setPower(-0.5);
             telemetry.update();
         }
         elbow.setPower(0);
 
-        //robot turns -90 degrees so previous 90 turn is cancelled
-        drive.turn(Math.toRadians(-95));
-
-        //strafe Left so robot touches wall again
-        Trajectory strafeLeft = drive.trajectoryBuilder(backward.end())
-                .strafeLeft(17)
+        Trajectory strafeLeft = drive.trajectoryBuilder(traj.end())
+                .strafeLeft(39.5*STRAFE)
                 .build();
-
         drive.followTrajectory(strafeLeft);
+        strafeLeft.end();
 
-        Left_Front_Wheel.setPower(-0.25);
-        Right_Front_Wheel.setPower(0.25);
-        Left_Rear_Wheel.setPower(0.25);
-        Right_Rear_Wheel.setPower(-0.25);
-        sleep(1000);
+
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(400);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
 
+        //power carousel for duck
+        carousel.setPower(0.5);
+        sleep(2500);
+        carousel.setPower(0);
 
-        //move forward 45 inches so in warehouse
-        Trajectory forward = drive.trajectoryBuilder(strafeLeft.end())
-                .forward(65)
-                .build();
-        drive.followTrajectory(forward);
-        forward.end();
-
-        //strafe right a little to protect against potentially getting rammed by the other team
-        strafeRight = drive.trajectoryBuilder(forward.end())
-                .strafeRight(25)
-                .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
+        Left_Front_Wheel.setPower(-0.275);
+        Right_Front_Wheel.setPower(-0.275);
+        Left_Rear_Wheel.setPower(-0.275);
+        Right_Rear_Wheel.setPower(-0.275);
+        sleep(1250);
+        Left_Front_Wheel.setPower(0);
+        Right_Front_Wheel.setPower(0);
+        Left_Rear_Wheel.setPower(0);
+        Right_Rear_Wheel.setPower(0);
 
     }
+
+
+
 
 
     private void third(){
@@ -332,23 +342,22 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        //strafe right a little so doesn't hit wall while turning later on
-        Trajectory strafeRight = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(13)
+
+        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(10.5*STRAFE)//13
                 .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
+        drive.followTrajectory(traj);
+
+        drive.turn(Math.toRadians(100));//99//97//95//100//96//100
 
 
-        //move backward so parallel to shipping hub
-        Trajectory backward = drive.trajectoryBuilder(strafeRight.end())
-                .back(25)
+        traj = drive.trajectoryBuilder(traj.end().plus(new Pose2d(0,0,Math.toRadians(85))),false)
+                .strafeRight(21)
                 .build();
-        drive.followTrajectory(backward);
+        drive.followTrajectory(traj);
+        traj.end();
 
 
-        //turn 90 degrees so robot is facing backwards (battery to the wall and arm is pointing to shipping hub)
-        drive.turn(Math.toRadians(95));
 
         //arm, elbow, picker init
         Left_Rear_Wheel = hardwareMap.get(DcMotor.class, "Left_back");
@@ -368,8 +377,8 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
 
         // extend arm
-        arm.setTargetPosition(1100);
-        while (arm.getCurrentPosition() < 1050 && opModeIsActive()) {
+        arm.setTargetPosition(1050);
+        while (arm.getCurrentPosition() < 1025 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -377,9 +386,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         arm.setPower(0);
 
+
         //running the picker to drop the cube
         int x=0;
-        while (x<50000 && opModeIsActive()){
+        while (x<120000 && opModeIsActive()){
             picker.setPower(1);
             x++;
             telemetry.addData("x value: ", x);
@@ -387,9 +397,10 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
         }
         picker.setPower(0);
 
+
         //arm retracts
-        arm.setTargetPosition(0);
-        while (arm.getCurrentPosition() > 50 && opModeIsActive()) {
+        arm.setTargetPosition(-50);
+        while (arm.getCurrentPosition() > -50 && opModeIsActive()) {
             arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm.setPower(-1);
             telemetry.addData("current position", arm.getCurrentPosition());
@@ -399,44 +410,41 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
 
 
-
-        //robot turns -90 degrees so previous 90 turn is cancelled
-        drive.turn(Math.toRadians(-95));
-
-        //strafe Left so robot touches wall again
-        Trajectory strafeLeft = drive.trajectoryBuilder(backward.end())
-                .strafeLeft(15)
+        Trajectory strafeLeft = drive.trajectoryBuilder(traj.end())
+                .strafeLeft(39.5*STRAFE)
                 .build();
-
         drive.followTrajectory(strafeLeft);
+        strafeLeft.end();
 
-        Left_Front_Wheel.setPower(-0.25);
-        Right_Front_Wheel.setPower(0.25);
-        Left_Rear_Wheel.setPower(0.25);
-        Right_Rear_Wheel.setPower(-0.25);
-        sleep(1000);
+
+        Left_Front_Wheel.setPower(0.275);
+        Right_Front_Wheel.setPower(0.275);
+        Left_Rear_Wheel.setPower(0.275);
+        Right_Rear_Wheel.setPower(0.275);
+        sleep(50);
+        Left_Front_Wheel.setPower(0);
+        Right_Front_Wheel.setPower(0);
+        Left_Rear_Wheel.setPower(0);
+        Right_Rear_Wheel.setPower(0);
+
+        //power carousel for duck
+        carousel.setPower(0.5);
+        sleep(2500);
+        carousel.setPower(0);
+
+
+        Left_Front_Wheel.setPower(-0.275);
+        Right_Front_Wheel.setPower(-0.275);
+        Left_Rear_Wheel.setPower(-0.275);
+        Right_Rear_Wheel.setPower(-0.275);
+        sleep(1250);
         Left_Front_Wheel.setPower(0);
         Right_Front_Wheel.setPower(0);
         Left_Rear_Wheel.setPower(0);
         Right_Rear_Wheel.setPower(0);
 
 
-        //move forward 45 inches so in warehouse
-        Trajectory forward = drive.trajectoryBuilder(strafeLeft.end())
-                .forward(65)
-                .build();
-        drive.followTrajectory(forward);
-        forward.end();
-
-        //strafe right a little to protect against potentially getting rammed by the other team
-        strafeRight = drive.trajectoryBuilder(forward.end())
-                .strafeRight(25)
-                .build();
-        drive.followTrajectory(strafeRight);
-        strafeRight.end();
-
     }
-
 
 
 
@@ -458,7 +466,7 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1, 16.0/9.0);
+            tfod.setZoom(1.25, 16.0/9.0);
         }
 
         telemetry.addData(">", "Press Play to start op mode");
@@ -469,9 +477,12 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-           if (tfod != null) {
+
+            if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
+
+
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 String position = "third";
                 if (updatedRecognitions != null) {
@@ -490,27 +501,31 @@ public class AutoOpsBlueWarehouse extends LinearOpMode {
                         double top = recognition.getTop();
                         double bottom = recognition.getBottom();
 
-                        if(recognition.getLabel().equals("Duck") && left>240 && left<360&& top>50 && top<180 &&right>320 && right<480 && bottom>130 && bottom<280){
+                        if(recognition.getLabel().equals("Duck") && left>300 && left<500&& right>300 && right<600){
                             position = "first";
                             break;
                         }
-                        if(recognition.getLabel().equals("Duck") && left>0 && left<120&& top>30 && top<170 &&right>50 && right<190 && bottom>100 && bottom<250){
+
+                        if(recognition.getLabel().equals("Duck") && left>0 && left<300&&right>100 && right<300){
                             position = "second";
                             break;
                         }
                         i++;
                     }
                     telemetry.addData("position",position);
-                    telemetry.update();
                     sleep(2000);
+                    telemetry.update();
 
                     if(position.equals("first")){
-                        first();
+
+                        //first();
                     }
                     if(position.equals("second")){
-                        second();
+
+                        //second();
                     }
                     if(position.equals("third")){
+
                         third();
                     }
                 }

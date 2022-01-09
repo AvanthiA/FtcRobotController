@@ -99,7 +99,7 @@ public class AutoOpsRedCarousel extends LinearOpMode {
 
         //sliding right closer to the depot
         traj = drive.trajectoryBuilder(forward.end())
-                .strafeRight(20.5)
+                .strafeRight(21.5)
                 .build();
         drive.followTrajectory(traj);
 
@@ -490,7 +490,7 @@ public class AutoOpsRedCarousel extends LinearOpMode {
 
         //move left 29.5 inches so robot is at carousel
         Trajectory strafeLeft = drive.trajectoryBuilder(forward.end())
-                .strafeLeft(30.5)
+                .strafeLeft(32.5)
                 .build();
         drive.followTrajectory(strafeLeft);
         strafeLeft.end();
@@ -582,11 +582,11 @@ public class AutoOpsRedCarousel extends LinearOpMode {
                         double top = recognition.getTop();
                         double bottom = recognition.getBottom();
 
-                        if(recognition.getLabel().equals("Duck") && left>310 && left<390&& top>80 && top<140 &&right>390 && right<480 && bottom>180 && bottom<260){
+                        if(recognition.getLabel().equals("Duck") && left>290 && left<410&& top>60 && top<160 &&right>370 && right<500 && bottom>160 && bottom<280){
                             position = "first";
                             break;
                         }
-                        if(recognition.getLabel().equals("Duck") && left>20 && left<110&& top>60 && top<130 &&right>100 && right<200 && bottom>160 && bottom<230){
+                        if(recognition.getLabel().equals("Duck") && left>0 && left<130&& top>40 && top<150 &&right>80 && right<220 && bottom>140 && bottom<250){
                             position = "second";
                             break;
                         }
@@ -599,10 +599,10 @@ public class AutoOpsRedCarousel extends LinearOpMode {
                         first();
                     }
                     if(position.equals("second")){
-                        second();
+                        first();
                     }
                     if(position.equals("third")){
-                        third();
+                        first();
                     }
                 }
             }

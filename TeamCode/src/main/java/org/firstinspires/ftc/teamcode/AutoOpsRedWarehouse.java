@@ -505,11 +505,11 @@ public class AutoOpsRedWarehouse extends LinearOpMode {
                         double top = recognition.getTop();
                         double bottom = recognition.getBottom();
 
-                        if(recognition.getLabel().equals("Duck") && left>390 && left<460&& top>70 && top<150 &&right>490 && right<560 && bottom>170 && bottom<250){
+                        if(recognition.getLabel().equals("Duck") && left>370 && left<480&& top>50 && top<170 &&right>460 && right<590 && bottom>130 && bottom<270){
                             position = "first";
                             break;
                         }
-                        if(recognition.getLabel().equals("Duck") && left>90 && left<160&& top>60 && top<140 &&right>180 && right<260 && bottom>170 && bottom<250){
+                        if(recognition.getLabel().equals("Duck") && left>60 && left<190&& top>40 && top<190 &&right>160 && right<290 && bottom>130 && bottom<290){
                             position = "second";
                             break;
                         }
@@ -523,10 +523,10 @@ public class AutoOpsRedWarehouse extends LinearOpMode {
                         first();
                     }
                     if(position.equals("second")){
-                        second();
+                        first();
                     }
                     if(position.equals("third")){
-                        third();
+                        first();
                     }
                 }
             }

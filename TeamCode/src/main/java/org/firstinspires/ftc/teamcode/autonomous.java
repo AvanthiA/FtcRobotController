@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Disabled
+
 @Autonomous(group = "drive")
 public class autonomous extends LinearOpMode {
 
@@ -24,39 +24,54 @@ public class autonomous extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        /*Trajectory forward = drive.trajectoryBuilder(new Pose2d())
-                .forward(20)
-                .build();
 
-        drive.followTrajectory(forward);
-        forward.end();
-        sleep(5000); */
 
         /*Trajectory strafeRightTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(40)
+                .strafeRight(10*1.32)
                 .build();
         drive.followTrajectory(strafeRightTrajectory);
         strafeRightTrajectory.end();
-        sleep(500); */
+        sleep(5000);
 
-        Trajectory strafeLeftTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeLeft(40)
+        strafeRightTrajectory = drive.trajectoryBuilder(strafeRightTrajectory.end())
+                .strafeRight(15*1.32)
                 .build();
-        drive.followTrajectory(strafeLeftTrajectory);
-        strafeLeftTrajectory.end();
-        sleep(500);
+        drive.followTrajectory(strafeRightTrajectory);
+        strafeRightTrajectory.end();
+        sleep(5000);
 
-        /*Trajectory backwardTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .back(15)
+        strafeRightTrajectory = drive.trajectoryBuilder(strafeRightTrajectory.end())
+                .strafeRight(5*1.32)
                 .build();
-        drive.followTrajectory(backwardTrajectory);
-        backwardTrajectory.end();*/
+        drive.followTrajectory(strafeRightTrajectory);
+        strafeRightTrajectory.end();
+        sleep(5000);
 
-        /*Trajectory forwardTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .forward(15)
+        strafeRightTrajectory = drive.trajectoryBuilder(strafeRightTrajectory.end())
+                .strafeRight(20*1.32)
                 .build();
-        drive.followTrajectory(forwardTrajectory);
-        forwardTrajectory.end();*/
+        drive.followTrajectory(strafeRightTrajectory);
+        strafeRightTrajectory.end();
+        sleep(5000);*/
+
+
+        /*Trajectory backward = drive.trajectoryBuilder(new Pose2d())
+                .back(20)
+                .build();
+
+        drive.followTrajectory(backward);
+        backward.end();
+        sleep(5000);*/
+
+        /*
+        strafeRightTrajectory = drive.trajectoryBuilder(forward.end())
+                .strafeRight(35)
+                .build();
+        drive.followTrajectory(strafeRightTrajectory);
+        strafeRightTrajectory.end();
+        sleep(5000);*/
+
+
 
 
     }
